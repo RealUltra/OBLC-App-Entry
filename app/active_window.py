@@ -155,8 +155,8 @@ class ActiveWindow(QWidget):
             self.oblc.set_language(book_info['language'])
             self.oblc.enter_page_count(book_info['page_count'])
 
-        if self.window.config.get('genre'):
-            self.oblc.enter_genres([self.window.config.get('genre')])
+        if self.genre:
+            self.oblc.enter_genres([self.genre])
 
         self.oblc.set_age_group(0)
         self.oblc.enter_facebook_link(post)
@@ -169,6 +169,7 @@ class ActiveWindow(QWidget):
         if not access_point:
             access_point = "Anisha - Qurum"
 
+        print("Access Point:", access_point)
         access_point_i = self.oblc.find_best_match(access_point, access_points)
 
         try:
@@ -206,16 +207,7 @@ class ActiveWindow(QWidget):
         self.row_i += 1
 
         try:
-            self.oblc.press_add_book_button()
-
-            s = time.time()
-            success = False
-
-            while time.time() < (s + 3):
-                if '/public/new-books' in self.oblc.driver.current_url:
-                    success = True
-                    break
-
+            success = self.oblc.press_add_book_button()
         except:
             success = True
 

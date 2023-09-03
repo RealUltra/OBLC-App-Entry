@@ -6,6 +6,7 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import os
 import re
 import time
 import string
@@ -26,7 +27,16 @@ class Facebook:
             chrome_options.add_argument('--log-level=3')
             chrome_options.add_experimental_option('excludeSwitches', ['enable-logging'])
 
-            service = Service(executable_path=ChromeDriverManager().install())
+            while True:
+                try:
+                    executable = ChromeDriverManager().install()
+                except:
+                    print('[ERROR] Failed to install chromedriver!')
+                else:
+                    print('[SUCCESS] Successfully installed chromedriver!')
+                    break
+
+            service = Service(executable_path=executable)
             service.creation_flags = CREATE_NO_WINDOW
 
             self.driver = webdriver.Chrome(service=service, options=chrome_options)
@@ -255,6 +265,7 @@ class Facebook:
                     access_point = sender
                 else:
                     access_point = filtered_msg
+                    print(message)
 
                 access_point_i = i
                 break
@@ -316,7 +327,9 @@ if __name__ == "__main__":
 
     #fb.comment('https://www.facebook.com/photo/?fbid=503792391848528&set=oa.161780706062025', '.')
 
-    comments = fb.scrape_comments('https://www.facebook.com/photo/?fbid=353463186881450&set=oa.229396109093024')
+    post = 'https://www.facebook.com/photo/?fbid=353463226881446&set=oa.229396109093024'
+    access_points = ['Anisha - Qurum', 'Reethu - MSQ', 'Eariele Arango  (Eariele) - Sohar', 'Sulaiman - Ghubra, Muscat', 'Nyasha - Al Hail', 'Rajeswari - Al Khuwair', 'Kanvi - Al Hail Greens', 'Shital - Wadi Kabir', 'Jessima - Azaiba', 'Nidhi Negandhi - Wadi Kabir', 'Shijila - Salalah', 'Jiya - Hatat Complex', 'Hansi - Darsait', 'Kunj Thakur  (Riya Thakur) - Darsait', 'Vindhya - Al mabelah', 'Trupti - Seeb', 'Nabila  ', 'Dhanya - Wadi Kabair', 'Ishani Prasobh  (Leena) - Ghala', 'Dr Zainab Ansari - Wadi Kabir', 'Sivasankari - Al Hail Greens', 'Siddhi Khare - Wadi Kabir', 'Abeda  ', 'Farzana  ', 'Remya Maniyath - Ghala', 'Samina - Ghubra, Muscat', 'Sparsha Vyas - Khuwair', 'Swetha Sujith Kumar - Ruwi', 'Thuraiya Al Kindy - Azaiba', 'Shilpa Deshpande - MSQ', 'Vijaylakshmi - Khuwair', 'gomathi Ganesh - Khuwair', 'Sakshi Markan - Ghubra', 'Hanisha Chawla - Ghubra, Al Asallah towers', 'Kripa C Pai - Ghala', 'Sujatha - Ruwi', 'Piya Toprani - Madinat Al Sultan Qaboos', 'Aina Junaid - Qurum', 'Asmi Raniga - Al Ghubra', 'Teny Tony  ', 'Hanane  ', 'Namiya - Wattayah', 'tarun - Bowsher', 'Pavithran  (Pavi) - Wadi Kabir', 'Sharanya - Ruwi', 'Aastha Kakaria - Al Khoud']
+    comments = fb.get_access_point_and_borrower(post, access_points, fb.get_author(post))
     print(comments)
     print(len(comments))
     input()

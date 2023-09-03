@@ -72,6 +72,8 @@ GENRES = ['Non-Fiction', 'Non-Fiction', None,
           None, 'Fiction', 'Fiction',
           'Fiction', None]
 
+os.popen('taskkill /F /im chromedriver.exe').read()
+
 def run_app():
     from .main_window import MainWindow
     app = QApplication(sys.argv)

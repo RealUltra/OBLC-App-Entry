@@ -4,6 +4,9 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from subprocess import CREATE_NO_WINDOW
 
@@ -21,7 +24,16 @@ class OBLC:
 
             chrome_options.add_experimental_option('excludeSwitches', ['enable-logging'])
 
-            service = Service(executable_path=ChromeDriverManager().install())
+            while True:
+                try:
+                    executable = ChromeDriverManager().install()
+                except:
+                    print('[ERROR] Failed to install chromedriver!')
+                else:
+                    print('[SUCCESS] Successfully installed chromedriver!')
+                    break
+
+            service = Service(executable_path=executable)
             service.creation_flags = CREATE_NO_WINDOW
 
             self.driver = webdriver.Chrome(service=service, options=chrome_options)
@@ -232,8 +244,11 @@ class OBLC:
         inp.send_keys(cover_photo_link)
 
     def press_add_book_button(self):
-        btn = self.driver.find_element(By.CSS_SELECTOR, '#add_book_btn')
-        btn.click()
+        action_chains = ActionChains(self.driver)
+
+        wait = WebDriverWait(self.driver, 1)
+        btn = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '#add_book_btn')))
+        action_chains.move_to_element(btn).click().perform()
 
         s = time.time()
         while time.time() < (s + 3):
@@ -290,3 +305,8 @@ class OBLC:
             duplicate_fb_links.append(fb_link)
 
         return duplicate_fb_links
+
+if __name__ == '__main__':
+    oblc = OBLC(headless=True)
+    oblc.add_book()
+    print(oblc.get_access_points())
