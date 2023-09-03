@@ -1,0 +1,93 @@
+/* Apply dark mode to the entire application */
+QWidget {
+    background-color: #333;
+    color: #fff;
+}
+
+/* Style for the back button */
+#backButton {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#backButton:hover {
+    background-color: #0056b3;
+}
+
+#backButton:pressed {
+    background-color: #003366; /* Click effect color */
+}
+
+/* Style for the copy buttons */
+#bookNameCopyButton,
+#bookIsbnCopyButton {
+    background-color: #6c757d;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#bookNameCopyButton:hover,
+#bookIsbnCopyButton:hover {
+    background-color: #5a6268;
+}
+
+#bookNameCopyButton:pressed,
+#bookIsbnCopyButton:pressed {
+    background-color: #464e54; /* Click effect color */
+}
+
+/* Style for enabled line edits */
+#bookNameEdit,
+#bookIsbnEdit,
+#firstRowEdit,
+#lastRowEdit,
+#firstLinkEdit {
+    padding: 8px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background-color: #444;
+    color: #fff;
+    width: 100%;
+}
+
+#bookNameEdit,
+#bookIsbnEdit {
+    color: #3e8ede;
+}
+
+/* Style for labels */
+#firstRowLabel,
+#lastRowLabel,
+#firstLinkLabel {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* Style for the start button */
+#startButton {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#startButton:hover {
+    background-color: #218838;
+}
+
+#startButton:pressed {
+    background-color: #1c7430; /* Click effect color */
+}

@@ -1,0 +1,14 @@
+/* Apply dark mode to the loading screen */
+QWidget {
+    background-color: #111;
+    color: #fff;
+}
+
+/* Style for the loading label */
+#loadingLabel {
+    font-size: 18px;
+    padding: 30px;
+    text-align: center;
+    font-family: "Arial", sans-serif; /* Choose a more interesting font */
+    color: #ff8800; /* Captivating color */
+}

@@ -1,0 +1,14 @@
+openpyxl
+requests
+langcodes
+langcodes[data]
+selenium
+beautifulsoup4
+colorama
+ttkthemes
+pyperclip
+PyQt5
+gspread
+google-api-python-client
+webdriver_manager
+plyer
