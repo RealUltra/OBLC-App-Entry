@@ -4,24 +4,24 @@ from tkinter import messagebox
 class MessageBoxShow(tk.Tk):
     def __init__(self, title, message, icon):
         super().__init__()
-        self.attributes('-topmost', True)
         self.withdraw()
+        self.attributes('-topmost', True)
         messagebox.showinfo(title, message, parent=self, icon=icon)
         self.destroy()
 
 class MessageBoxAsk(tk.Tk):
     def __init__(self, title, message, icon):
         super().__init__()
-        self.attributes('-topmost', True)
         self.withdraw()
+        self.attributes('-topmost', True)
         self.result = messagebox.askyesno(title, message, parent=self, icon=icon)
         self.destroy()
 
 class MessageBoxAskCancel(tk.Tk):
     def __init__(self, title, message, icon):
         super().__init__()
-        self.attributes('-topmost', True)
         self.withdraw()
+        self.attributes('-topmost', True)
         self.result = messagebox.askyesnocancel(title, message, parent=self, icon=icon)
         self.destroy()
 

@@ -4,13 +4,14 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.http import MediaIoBaseDownload
 from google.auth.transport.requests import Request
 import os
+import webbrowser
 import io
 import openpyxl
 from . import *
 from .messagebox import *
 
 def get_authenticated_service():
-    scopes = ['https://www.googleapis.com/auth/drive']
+    scopes = ['https://www.googleapis.com/auth/drive.readonly']
     creds = None
 
     # Check if token file exists
@@ -25,10 +26,22 @@ def get_authenticated_service():
             flow = InstalledAppFlow.from_client_secrets_file(credentials_file, scopes)
             messagebox.showinfo('Log In', 'You must log into your gmail account to allow access to the database project excel file!')
 
-            try:
-                creds = flow.run_local_server(port=0, authorization_prompt_message="", timeout_seconds=300)
-            except:
-                return
+            while True:
+                try:
+                    creds = flow.run_local_server(port=0, authorization_prompt_message="", timeout_seconds=300)
+                except:
+                    creds = None
+
+                if not creds:
+                    resp = messagebox.askyesno("Haven't logged in", "You haven't logged into your gmail account. Are you still trying to log in?")
+
+                    if resp:
+                        webbrowser.open(flow.redirect_uri)
+                    else:
+                        return
+
+                else:
+                    break
 
         # Save the credentials for next time
         with open(token_file, 'w') as token:

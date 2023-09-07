@@ -5,6 +5,8 @@ from _thread import start_new_thread
 import re
 import json
 import time
+import pyperclip
+from functools import partial
 from plyer import notification
 from . import *
 from .messagebox import *
@@ -62,9 +64,6 @@ class ActiveWindow(QWidget):
         self.row_edit.setEnabled(False)
         self.book_name_edit.setEnabled(False)
         self.book_isbn_edit.setEnabled(False)
-        self.row_edit.setPlaceholderText("Row Number")
-        self.book_name_edit.setPlaceholderText("Book Name")
-        self.book_isbn_edit.setPlaceholderText("Book ISBN")
 
         self.row_edit.setObjectName("rowEdit")
         self.book_name_copy_button.setObjectName("bookNameCopyButton")
@@ -76,10 +75,17 @@ class ActiveWindow(QWidget):
         self.repeat_button.setObjectName("repeatButton")
         self.back_button.setObjectName("backButton")
 
+        self.book_name_copy_button.clicked.connect(lambda: pyperclip.copy(self.book_name_edit.text()))
+        self.book_isbn_copy_button.clicked.connect(lambda: pyperclip.copy(self.book_isbn_edit.text()))
         self.add_button.clicked.connect(self.add_pressed)
         self.skip_button.clicked.connect(self.skip_pressed)
         self.repeat_button.clicked.connect(self.repeat_pressed)
         self.back_button.clicked.connect(self.back_pressed)
+
+        self.add_button.setToolTip("Add book to OBLC, send comment on facebook and move on to the next book.")
+        self.skip_button.setToolTip("Discard book details entered and move on to the next book.")
+        self.repeat_button.setToolTip("Re-enter current book's details.")
+        self.back_button.setToolTip("Move to the previous book.")
 
         self.layout.addWidget(self.row_edit, 0, 1, 1, 3)
         self.layout.addWidget(self.book_name_copy_button, 1, 0)
@@ -169,7 +175,6 @@ class ActiveWindow(QWidget):
         if not access_point:
             access_point = "Anisha - Qurum"
 
-        print("Access Point:", access_point)
         access_point_i = self.oblc.find_best_match(access_point, access_points)
 
         try:
@@ -393,6 +398,12 @@ class ActiveWindow(QWidget):
         )
 
         self.stacked_layout.setCurrentIndex(5)
+
+    def copy_data(self, edit):
+        text = edit.text()
+        print("Copy this text:", text)
+        pyperclip.copy(text)
+        showinfo("Copied", "The text has been copied to clipboard!")
 
     def handle_browser(self):
         while self.running:

@@ -40,7 +40,9 @@ QWidget {
 }
 
 /* Style for labels */
-#rowLabel {
+#rowNumberLabel,
+#bookNameLabel,
+#bookIsbnLabel {
     font-weight: bold;
     margin-top: 10px;
 }

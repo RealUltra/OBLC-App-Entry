@@ -80,6 +80,8 @@ class Use(QWidget):
         self.first_link_edit.textChanged.connect(self.on_first_link_changed)
         self.start_button.clicked.connect(self.start_pressed)
 
+        self.start_button.setToolTip("Get started with the app entries!")
+
         layout.addWidget(self.back_button, 0, 0, 1, 2)
         layout.addWidget(self.book_name_copy_button, 1, 0)
         layout.addWidget(self.book_name_edit, 1, 1)

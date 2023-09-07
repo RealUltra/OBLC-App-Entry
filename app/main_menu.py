@@ -35,6 +35,11 @@ class MainMenu(QWidget):
         facebook_settings_button.clicked.connect(lambda: self.stacked_layout.setCurrentIndex(3))
         other_settings_button.clicked.connect(lambda: self.stacked_layout.setCurrentIndex(4))
 
+        use_button.setToolTip("Choose what books to work on and get started!")
+        oblc_settings_button.setToolTip("Enter your OBLC credentials!")
+        facebook_settings_button.setToolTip("Enter your Facebook credentials!")
+        other_settings_button.setToolTip("Enter other necessary settings!")
+
         layout.addWidget(use_button)
         layout.addWidget(oblc_settings_button)
         layout.addWidget(facebook_settings_button)
