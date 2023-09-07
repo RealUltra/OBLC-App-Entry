@@ -260,6 +260,7 @@ class ActiveWindow(QWidget):
         oblc_password = self.window.config.get('oblc_password')
         facebook_email = self.window.config.get('facebook_email')
         facebook_password = self.window.config.get('facebook_password')
+        fb_album_link = self.window.config.get('facebook_album_link')
         excel_sheet_name = self.window.config.get('excel_sheet_name')
         first_row = self.window.config.get('first_row')
         last_row = self.window.config.get('last_row')
@@ -279,6 +280,10 @@ class ActiveWindow(QWidget):
             return
         elif not facebook_password:
             showerror("Error", "Please enter your facebook password.")
+            self.stacked_layout.setCurrentIndex(3)
+            return
+        elif not fb_album_link:
+            showerror("Error", "Please enter your facebook album link.")
             self.stacked_layout.setCurrentIndex(3)
             return
         elif not excel_sheet_name:
@@ -314,7 +319,7 @@ class ActiveWindow(QWidget):
             self.stacked_layout.setCurrentIndex(3)
             return
 
-        album_id = self.get_album_id(first_post_link)
+        album_id = self.get_album_id(fb_album_link)
 
         if not album_id:
             showerror("Error", "The facebook post link for the first book that has been entered is invalid. Please try again!")

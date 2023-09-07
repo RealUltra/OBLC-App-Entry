@@ -85,6 +85,7 @@ class MainWindow(QWidget):
             "oblc_password": "",
             "facebook_email": "",
             "facebook_password": "",
+            "album_link": "",
             "excel_sheet_name": "",
             "first_row": "",
             "last_row": "",

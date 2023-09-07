@@ -15,10 +15,11 @@ class FacebookSettings(QWidget):
     def selected(self):
         self.window.setWindowTitle('OBLC Data Entry | Facebook Settings')
         self.window.setStyleSheet(self.read_css('facebook_settings.css'))
-        self.window.setFixedSize(450, 140)
+        self.window.setFixedSize(450, 180)
 
         self.email_edit.setText(self.window.config.get('facebook_email'))
         self.password_edit.setText(self.window.config.get('facebook_password'))
+        self.album_edit.setText(self.window.config.get('facebook_album_link'))
 
         self.password_edit.setEchoMode(QLineEdit.Password)
         self.show_password_checkbox.setChecked(False)
@@ -31,6 +32,8 @@ class FacebookSettings(QWidget):
         self.password_label = QLabel("Password:")
         self.password_edit = QLineEdit()
         self.show_password_checkbox = QCheckBox()
+        self.album_label = QLabel("Album Link:")
+        self.album_edit = QLineEdit()
         self.done_button = QPushButton("Done")
 
         self.show_password_checkbox.clicked.connect(self.show_password_pressed)
@@ -41,7 +44,9 @@ class FacebookSettings(QWidget):
         layout.addWidget(self.password_label, 1, 0, Qt.AlignCenter)
         layout.addWidget(self.password_edit, 1, 1)
         layout.addWidget(self.show_password_checkbox, 1, 2)
-        layout.addWidget(self.done_button, 2, 0, 1, 3, Qt.AlignBottom)
+        layout.addWidget(self.album_label, 2, 0)
+        layout.addWidget(self.album_edit, 2, 1)
+        layout.addWidget(self.done_button, 3, 0, 1, 3, Qt.AlignBottom)
 
         self.setLayout(layout)
 
@@ -52,9 +57,11 @@ class FacebookSettings(QWidget):
     def done_pressed(self):
         email = self.email_edit.text()
         password = self.password_edit.text()
+        album_link = self.album_edit.text()
 
         self.window.config['facebook_email'] = email
         self.window.config['facebook_password'] = password
+        self.window.config['facebook_album_link'] = album_link
 
         self.window.update_config()
 
