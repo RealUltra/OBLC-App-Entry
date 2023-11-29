@@ -30,7 +30,8 @@ ALBUM_IDS = [
     "oa.336757238244799", "oa.289383589791983", "oa.4311918308925312",
     "oa.161780706062025", "oa.345804293855070", "oa.1120908834982990",
     "oa.577121506778166", "oa.145074107732807", "oa.229396109093024",
-    "oa.333655905121158", "oa.331323592060283"
+    "oa.333655905121158", "oa.331323592060283", "oa.6882482225115553",
+    "oa.351139606335779"
 ]
 
 FB_CATEGORIES = [
@@ -59,7 +60,9 @@ FB_CATEGORIES = [
     "Graphic Novels & Comics",
     "Growing Readers & Young Adult Books",
     "Beginner Readers & Young Readers",
-    "Babies & Toddlers, Story Books"
+    "Babies & Toddlers, Story Books",
+    "Young Adults 3: Books and Borrowing",
+    "5 to 10 year olds"
 ]
 
 GENRES = ['Non-Fiction', 'Non-Fiction', None,
