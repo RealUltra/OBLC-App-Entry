@@ -145,6 +145,12 @@ def get_posts_and_photos(file_path, fb, album_link, album_name):
             json.dump(posts_and_photos, f)
         print("Scraped!\n")
 
+    else:
+        with open(file_path, 'r') as f:
+            posts_and_photos = json.load(f)
+
+    return posts_and_photos
+
 def main():
     fb_email = input("[FACEBOOK EMAIL] ").strip()
     fb_password = input("[FACEBOOK PASSWORD] ")
