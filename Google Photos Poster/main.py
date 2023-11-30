@@ -3,9 +3,7 @@ import os, re
 import json
 import time
 import random
-from app.facebook_scraper import Facebook
-
-print("*Please log into an account to access Google Photos*")
+from facebook_scraper import Facebook
 
 client = GooglePhotosClient.authenticate('client_secrets.json', 'token.json')
 
@@ -55,7 +53,7 @@ FB_CATEGORIES = [
 
 posts_and_photos_dir = "posts_and_photos"
 
-def get_google_photos_link(post_link, image_link=None, album_id=None, image_id=None, previous_image_id=None):
+def upload_to_google_photos(post_link, image_link=None, album_id=None, image_id=None, previous_image_id=None):
     fb_album_id = get_album_id(post_link)
     fb_image_id = get_image_id(post_link)
     album_name = FB_CATEGORIES[ALBUM_IDS.index(fb_album_id)]
@@ -81,10 +79,10 @@ def get_google_photos_link(post_link, image_link=None, album_id=None, image_id=N
 
     if not image_id:
         resp = client.upload_photo_from_url(image_link, album_id=album_id, description=fb_image_id, previous_image_id=previous_image_id)
-        return resp.get('newMediaItemResults')[0].get('mediaItem').get('productUrl')
+        return resp.get('newMediaItemResults')[0].get('mediaItem')
 
     else:
-        return client.get_photo_by_id(image_id).get('productUrl')
+        return client.get_photo_by_id(image_id)
 
 def get_album_id(fb_link):
     r = re.search(r'set=([\d\w\.]+)', fb_link)
@@ -218,13 +216,18 @@ def main():
                         previous_image_id = uploaded_photo_ids[previous_fb_image_id]
 
                 try:
-                    gphotos_link = exponential_backoff(lambda: get_google_photos_link(post, photo, gphotos_album_id, 0, previous_image_id), max_retries=10)
+                    g_photo = exponential_backoff(lambda: upload_to_google_photos(post, photo, gphotos_album_id, 0, previous_image_id), max_retries=10)
                 except:
                     print(f"{i + 1}/{len(posts_and_photos)} of {album_name}: FAILED")
                     failure = True
                     break
 
+                gphotos_link = g_photo.get('productUrl')
+                image_id = g_photo.get('id')
+
                 print(f"{i + 1}/{len(posts_and_photos)} of {album_name}: {gphotos_link}")
+                uploaded_photo_ids[fb_image_id] = image_id
+
 
     fb.driver.quit()
     print("Done!")
