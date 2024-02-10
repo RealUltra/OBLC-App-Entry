@@ -258,8 +258,7 @@ class ActiveWindow(QWidget):
 
         oblc_email = self.window.config.get('oblc_email')
         oblc_password = self.window.config.get('oblc_password')
-        facebook_email = self.window.config.get('facebook_email')
-        facebook_password = self.window.config.get('facebook_password')
+        facebook_cookies = self.window.config.get('facebook_cookies')
         fb_album_link = self.window.config.get('facebook_album_link')
         excel_sheet_name = self.window.config.get('excel_sheet_name')
         first_row = self.window.config.get('first_row')
@@ -273,14 +272,6 @@ class ActiveWindow(QWidget):
         elif not oblc_password:
             showerror("Error", "Please enter your OBLC password.")
             self.stacked_layout.setCurrentIndex(2)
-            return
-        elif not facebook_email:
-            showerror("Error", "Please enter your facebook email address.")
-            self.stacked_layout.setCurrentIndex(3)
-            return
-        elif not facebook_password:
-            showerror("Error", "Please enter your facebook password.")
-            self.stacked_layout.setCurrentIndex(3)
             return
         elif not fb_album_link:
             showerror("Error", "Please enter your facebook album link.")
@@ -307,15 +298,22 @@ class ActiveWindow(QWidget):
 
         self.window.loading_screen.loading_label.setText("Logging into facebook")
 
+        try:
+            facebook_cookies = json.loads(facebook_cookies)
+        except:
+            showerror("Error", "Could not log into facebook!")
+            self.stacked_layout.setCurrentIndex(3)
+            return
+
         self.facebook = Facebook()
-        self.facebook.login(facebook_email, facebook_password)
+        self.facebook.add_cookies(facebook_cookies)
 
         self.window.loading_screen.loading_label.setText("Loading")
 
         if not self.facebook.is_logged_in():
             self.facebook.driver.quit()
             self.facebook = None
-            showerror("Error", "Failed to login to facebook. Please check your credentials and try again!")
+            showerror("Error", "Could not log into facebook!")
             self.stacked_layout.setCurrentIndex(3)
             return
 
@@ -355,6 +353,7 @@ class ActiveWindow(QWidget):
 
         posts_start_index = -1
         for i, (post, photo) in enumerate(self.posts_and_photos):
+            print(self.get_image_id(post), self.get_image_id(first_post_link))
             if self.get_image_id(post) == self.get_image_id(first_post_link):
                 posts_start_index = i
                 break
@@ -424,13 +423,13 @@ class ActiveWindow(QWidget):
             return f.read()
 
     def get_album_id(self, fb_link):
-        r = re.search('set=([\d\w\.]+)', fb_link)
+        r = re.search(r'set=([\d\w\.]+)', fb_link)
 
         if r:
             return r[1]
 
     def get_image_id(self, fb_link):
-        r = re.search('fbid=(\d+)', fb_link)
+        r = re.search(r'fbid=(\d+)', fb_link)
 
         if r:
             return r[1]

@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.service import Service
+from selenium.common.exceptions import *
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -14,13 +15,16 @@ from bs4 import BeautifulSoup
 from subprocess import CREATE_NO_WINDOW
 
 class Facebook:
-    def __init__(self, driver=None):
+    def __init__(self, driver=None, headless=False):
         if driver:
             self.driver = driver
         else:
             chrome_options = webdriver.ChromeOptions()
             chrome_options.add_argument('--disable-notifications')
-            chrome_options.add_argument('--headless')
+
+            if headless:
+                chrome_options.add_argument('--headless')
+
             chrome_options.add_argument('--no-sandbox')
             chrome_options.add_argument('--disable-dev-shm-usage')
             chrome_options.add_argument("--window-size=1920,1080")
@@ -41,17 +45,29 @@ class Facebook:
 
             self.driver = webdriver.Chrome(service=service, options=chrome_options)
 
-    def login(self, email, password):
+    def start_login_window(self):
         self.driver.get('https://www.facebook.com/')
 
-        email_input = self.driver.find_element(By.ID, "email")
-        password_input = self.driver.find_element(By.ID, "pass")
+        cookies = {}
+        try:
+            while True:
+                cookies = self.driver.get_cookies()
+                self.driver.execute_script("return true;")
+                time.sleep(1)  # Adjust the sleep time as needed
 
-        email_input.send_keys(email)
-        password_input.send_keys(password)
-        password_input.submit()
+        except WebDriverException:
+            pass
 
-        time.sleep(5)
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
+        return cookies
+
+    def add_cookies(self, cookies):
+        self.driver.get('https://www.facebook.com/')
+
+        for cookie in cookies:
+            self.driver.add_cookie(cookie)
 
     def is_logged_in(self):
         response = True
@@ -134,17 +150,19 @@ class Facebook:
 
         action_chains = ActionChains(self.driver)
 
-        wait = WebDriverWait(self.driver, 3)
-        shown_comments_button = wait.until(EC.visibility_of_element_located((By.XPATH, '/html/body/div[1]/div/div[1]/div/div[3]/div/div/div/div[1]/div[1]/div/div[2]/div/div/div/div[1]/div[4]/div[1]/div/div/div/span')))
+        wait = WebDriverWait(self.driver, 5)
+        shown_comments_button = wait.until(EC.visibility_of_element_located((By.XPATH, '/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[1]/div[1]/div/div[2]/div/div/div/div[1]/div[4]/div[1]/div/div')))
         action_chains.move_to_element(shown_comments_button).click().perform()
 
-        wait = WebDriverWait(self.driver, 3)
-        menu_div = wait.until(EC.visibility_of_element_located((By.XPATH, '/html/body/div[1]/div/div[1]/div/div[3]/div/div/div/div[2]/div/div/div[1]/div[1]/div/div')))
+        wait = WebDriverWait(self.driver, 5)
+        menu_div = wait.until(EC.visibility_of_element_located((By.XPATH, '/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[2]/div/div/div[1]/div[1]/div/div')))
         menu_items = menu_div.find_elements(By.XPATH, "//div[@role='menuitem']")
+        time.sleep(3)
         action_chains.move_to_element(menu_items[-1]).click().perform()
+        #menu_items[-1].click()
 
         try:
-            wait = WebDriverWait(self.driver, 3)
+            wait = WebDriverWait(self.driver, 5)
             show_previous_button = wait.until(EC.visibility_of_element_located((By.XPATH, '/html/body/div[1]/div/div[1]/div/div[3]/div/div/div/div[1]/div[1]/div/div[2]/div/div/div/div[1]/div[4]/div[1]/div[1]/div[2]')))
             action_chains.move_to_element(show_previous_button).click().perform()
         except:
@@ -196,8 +214,8 @@ class Facebook:
     def get_author(self, post_url):
         self.driver.get(post_url)
 
-        wait = WebDriverWait(self.driver, 3)
-        poster_elem = wait.until(EC.visibility_of_element_located((By.XPATH, '/html/body/div[1]/div/div[1]/div/div[3]/div/div/div/div[1]/div[1]/div/div[2]/div/div/div/div[1]/div[1]/div[1]/div[1]/div[2]/div/div[1]/span/div/h2/span/span/span/a')))
+        wait = WebDriverWait(self.driver, 5)
+        poster_elem = wait.until(EC.visibility_of_element_located((By.XPATH, '/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[1]/div[1]/div/div[2]/div/div/div/div[1]/div[1]/div[1]/div[1]/div[2]/div/div[1]/span/div/h2/span')))
         poster = poster_elem.text
 
         return poster

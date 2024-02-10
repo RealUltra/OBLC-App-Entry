@@ -73,7 +73,7 @@ GENRES = ['Non-Fiction', 'Non-Fiction', None,
           None, 'Fiction', 'Non-Fiction',
           'Non-Fiction', 'Fiction', 'Non-Fiction',
           None, 'Fiction', 'Fiction',
-          'Fiction', None]
+          'Fiction', None, None]
 
 os.popen('taskkill /F /im chromedriver.exe').read()
 
